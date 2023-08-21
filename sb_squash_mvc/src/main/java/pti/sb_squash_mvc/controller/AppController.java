@@ -111,6 +111,7 @@ public class AppController {
 		model.addAttribute("loggedinuser", SecurityContextHolder.getContext().getAuthentication().getName());
 		model.addAttribute("playersList", service.getAllPlayers());
 		model.addAttribute("placesList", service.getAllPlaces());
+		model.addAttribute("matchdto", new MatchDto());
 		
 		return "admin.html";
 	}
@@ -131,6 +132,7 @@ public class AppController {
 		model.addAttribute("loggedinuser", SecurityContextHolder.getContext().getAuthentication().getName());
 		model.addAttribute("playersList", service.getAllPlayers());
 		model.addAttribute("placesList", service.getAllPlaces());
+		model.addAttribute("matchdto", new MatchDto());
 		
 		return "admin.html";
 	}
