@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pti.sb_squash_mvc.dto.MatchDto;
+import pti.sb_squash_mvc.dto.PasswordChangeResponse;
 import pti.sb_squash_mvc.model.Match;
 import pti.sb_squash_mvc.model.Place;
 import pti.sb_squash_mvc.model.Player;
@@ -148,5 +149,46 @@ public class AppController {
 		
 		return "admin";
 	}
+		
+	@GetMapping("/player/changepwd")
+	public String showPasswordChangeForm(Model model) {
+		
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Player loggedInPlayer = service.getPlayerByEmailAddress(username);
+		
+		model.addAttribute("player", loggedInPlayer);
+		
+		return "changepwd.html";
+	}
+	
+	@PostMapping("/player/changepwd")
+	public String changePassword(
+			Model model,
+			@RequestParam(name="playerEmail") String playerEmail,
+			@RequestParam(name="oldPassword") String oldPassword,
+			@RequestParam(name="newPassword") String newPassword,
+			@RequestParam(name="newPasswordAgain") String newPasswordAgain) {
+		
+		
+		String targetPage = "changepwd.html";
+		
+		PasswordChangeResponse pwdChangeSuccess = service.amendPlayerPassword(playerEmail, oldPassword, newPassword, newPasswordAgain);
+		
+		if(pwdChangeSuccess.isSuccess() == true) {
+
+			targetPage = "redirect:/?passwordupdated";
+		}
+		else {
+			
+			Player loggedInPlayer = service.getPlayerByEmailAddress(playerEmail);
+			
+			model.addAttribute("player", loggedInPlayer);
+			model.addAttribute("message", pwdChangeSuccess.getResponseMessage());
+		}
+		
+		
+		return targetPage;
+	}
+	
 	
 }

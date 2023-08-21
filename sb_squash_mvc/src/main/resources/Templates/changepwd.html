@@ -11,7 +11,7 @@
 		<p>No worries, it is easy-peasy!</p>
 		
 		<form action="/player/changepwd" method="POST">
-			<input type="hidden" name="playerEmail" value="${player.email}" />
+			<input type="hidden" name="playerEmail" th:value="${player.email}" />
 			<div>
 				<label>
 					Old password:
@@ -34,5 +34,6 @@
 				<button>Change password!</button>
 			</div>
 		</form>
+		<h3 th:text="${message}"></h3>
 	</body>
 </html>

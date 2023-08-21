@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import pti.sb_squash_mvc.dao.Database;
 import pti.sb_squash_mvc.dto.MatchDto;
+import pti.sb_squash_mvc.dto.PasswordChangeResponse;
 import pti.sb_squash_mvc.model.Match;
 import pti.sb_squash_mvc.model.Place;
 import pti.sb_squash_mvc.model.Player;
@@ -127,6 +128,49 @@ public class AppService {
 		newMatch.setDate(matchDto.getDate());
 		
 		db.addMatch(newMatch, matchDto.getPlaceId(), matchDto.getPlayer1Email(), matchDto.getPlayer2Email());
+	}
+	
+	public Player getPlayerByEmailAddress(String email) {
+		
+		Player player = db.getUserByEmail(email);
+		
+		return player;
+	}
+
+	
+	public PasswordChangeResponse amendPlayerPassword(String playerEmail, String oldPassword, String newPassword,
+			String newPasswordAgain) {
+		
+		PasswordChangeResponse responseObj = null;
+		BCryptPasswordEncoder pwdEncoder = new BCryptPasswordEncoder(12);
+		
+		Player player = db.getUserByEmail(playerEmail);
+		
+		boolean oldPasswordMatches = pwdEncoder.matches(oldPassword, player.getPassword()); 
+
+		if(oldPasswordMatches == true) {
+			
+			if(newPassword.equals(newPasswordAgain) == true) {
+				
+				player.setPassword(pwdEncoder.encode(newPassword));
+				player.setActivated(true);
+				
+				db.updateUser(player);
+				
+				responseObj = new PasswordChangeResponse(true, "Password has been changed succesfully.");
+			}
+			else {
+				
+				responseObj = new PasswordChangeResponse(false, "Password change failed: The new password and its repeat do not match.");
+			}
+		}
+		else {
+			
+			responseObj = new PasswordChangeResponse(false, "Password change failed: Old password mismatch.");
+		}
+		
+		
+		return responseObj;
 	}
 
 }

@@ -110,7 +110,13 @@ public class Database {
 		Session session = hbUtil.getSession();
 		Transaction tx = session.beginTransaction();
 		
-		session.merge(player);
+		MutationQuery q = session.createNativeMutationQuery("UPDATE players SET password = ?1, username = ?2, activated = ?3 WHERE email = ?4");
+		q.setParameter(1, player.getPassword());
+		q.setParameter(2, player.getPlayerName());
+		q.setParameter(3, player.isActivated());
+		q.setParameter(4, player.getEmail());
+		
+		q.executeUpdate();
 		
 		tx.commit();
 		session.close();

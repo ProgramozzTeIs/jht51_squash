@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pti.sb_squash_mvc.model.Player;
 
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -19,16 +20,26 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 		
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		
-		for(GrantedAuthority auth : authorities) {
+		Player player = (Player) authentication.getPrincipal();
+		
+		if(player.isActivated() == false) {
 			
-			if(auth.getAuthority().equals("ADMIN")) {
+			response.sendRedirect("/player/changepwd");
+		}
+		else {
+			
+			for(GrantedAuthority auth : authorities) {
 				
-				response.sendRedirect("/admin");
-			} else {
-				
-				response.sendRedirect("/");
+				if(auth.getAuthority().equals("ADMIN")) {
+					
+					response.sendRedirect("/admin");
+				} else {
+					
+					response.sendRedirect("/");
+				}
 			}
 		}
+	
 		
 	}
 
