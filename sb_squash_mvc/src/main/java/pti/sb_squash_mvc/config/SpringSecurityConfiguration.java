@@ -30,7 +30,9 @@ public class SpringSecurityConfiguration {
 		.sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
 		.csrf((csrf) -> csrf
-				.disable());
+				.disable())
+		.exceptionHandling((exception) -> exception
+				.accessDeniedPage("/?unauthorized"));
 
     	
     	return http.build();
