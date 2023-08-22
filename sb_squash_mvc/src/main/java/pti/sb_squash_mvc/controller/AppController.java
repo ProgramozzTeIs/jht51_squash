@@ -146,6 +146,7 @@ public class AppController {
 		
 		service.registerMatch(matchdto);
 		
+		model.addAttribute("loggedinuser", SecurityContextHolder.getContext().getAuthentication().getName());
 		model.addAttribute("playersList", service.getAllPlayers());
 		model.addAttribute("placesList", service.getAllPlaces());
 		model.addAttribute("matchdto", new MatchDto());
