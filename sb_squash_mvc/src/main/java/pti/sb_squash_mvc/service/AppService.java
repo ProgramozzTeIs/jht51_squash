@@ -18,11 +18,13 @@ import pti.sb_squash_mvc.model.Player;
 public class AppService {
 	
 	private final Database db;
+	private final EmailSender emailSender;
 	
 	@Autowired
-	public AppService(Database db) {
+	public AppService(Database db, EmailSender emailSender) {
 		
 		this.db = db;
+		this.emailSender = emailSender;
 	}
 	
 	// These methods are up for debate, they are nowhere near finalized!
@@ -75,15 +77,22 @@ public class AppService {
 		PasswordGeneratorService rndPwService = new PasswordGeneratorService();
 		String randomPassword = rndPwService.generatePassword();
 		System.out.println(">>> New password generated for " + email + " account: " + randomPassword + " <<<");
-		// Email sending service should be implemented and called here.
 		
-		playerToRegister.setPassword( new BCryptPasswordEncoder(12).encode(randomPassword) );
+		String passwordToEncode = randomPassword;
+		
+		playerToRegister.setPassword( new BCryptPasswordEncoder(12).encode(passwordToEncode) );
 		
 		
 		try {
 			
 			db.addUser(playerToRegister, roleId);
 			updateResult = "Account '" + playerToRegister.getEmail() + "' registered successfully.";
+			
+			emailSender.sendEmail(
+					playerToRegister.getEmail(), 
+					"You have been registered at HungarianSquashAssociation.com", 
+					"Your new account is ready for use. You can log in with your email address and the following generated password: " + randomPassword
+					);
 		}
 		catch(ConstraintViolationException e) {
 			

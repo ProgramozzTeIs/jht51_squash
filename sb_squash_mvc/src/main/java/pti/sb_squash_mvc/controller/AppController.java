@@ -19,6 +19,7 @@ import pti.sb_squash_mvc.model.Place;
 import pti.sb_squash_mvc.model.Player;
 import pti.sb_squash_mvc.service.AppService;
 
+
 @Controller
 public class AppController {
 	
@@ -42,7 +43,7 @@ public class AppController {
 		model.addAttribute("playersList", playersList);
 		model.addAttribute("placesList", placesList);
 		model.addAttribute("matchesList", matchesList);
-		
+
 		return "index";
 	}
 	

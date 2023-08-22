@@ -34,9 +34,8 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 			Player loggedInPlayer = service.getPlayerByEmailAddress(username);
 
 			if(loggedInPlayer.isActivated() == false) {
-				
-				HttpServletResponse httpresp = (HttpServletResponse) response;
-				httpresp.sendRedirect("/player/changepwd");
+
+				response.sendRedirect("/player/changepwd");
 			}
 		}
 		
