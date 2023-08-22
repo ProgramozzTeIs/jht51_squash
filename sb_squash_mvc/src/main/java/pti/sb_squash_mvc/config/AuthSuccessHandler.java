@@ -22,12 +22,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 		
 		Player player = (Player) authentication.getPrincipal();
 		
-		if(player.isActivated() == false) {
-			
-			response.sendRedirect("/player/changepwd");
-		}
-		else {
-			
+		if(player.isActivated() == true) {
+				
 			for(GrantedAuthority auth : authorities) {
 				
 				if(auth.getAuthority().equals("ADMIN")) {
@@ -38,6 +34,10 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 					response.sendRedirect("/");
 				}
 			}
+		}
+		else {
+			
+			response.sendRedirect("/player/changepwd");
 		}
 	
 		
